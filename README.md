@@ -1,91 +1,77 @@
-# 📚 Book Store API
+# 🔗 LinkDock – URL Shortener APP
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![License](https://img.shields.io/badge/license-ISC-green.svg)
-![Node.js](https://img.shields.io/badge/node.js-v16+-green.svg)
+![Node.js](https://img.shields.io/badge/node.js-v18%2B-brightgreen.svg)
 ![Status](https://img.shields.io/badge/status-Active-success.svg)
-
----
-
-## 📋 Table of Contents
-- [Overview](#-overview)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Installation](#-installation)
-- [API Endpoints](#-api-endpoints)
-- [Environment Variables](#-environment-variables)
-- [Usage](#-usage)
-- [Security](#-security)
-- [Contributing](#-contributing)
-- [Author](#-author)
-- [Acknowledgments](#-acknowledgments)
 
 ---
 
 ## 🎯 Overview
 
-**Book Store API** is a full-featured, scalable RESTful API for managing an online book store. Built with Node.js, Express.js, and MongoDB, it supports user authentication, CRUD operations on books, admin management, and image uploads with cloud storage integration.
+**LinkDock** is a modern, secure REST API for shortening and managing URLs.  
+It provides authentication, custom link creation, analytics, and email-based password recovery — all designed with scalability and security in mind.
 
-> 💡 Manage books, users, admin tasks, and media uploads securely and efficiently using modern backend practices.
+> 💡 Shorten, customize, manage, and analyze your links effortlessly.
 
 ---
 
 ## ✨ Features
 
-✅ **User Authentication & Authorization**
-- Secure JWT-based login and registration
+### 🔐 Secure Authentication
+- JWT-based login & registration
 - Password hashing using bcrypt
-- Role-based API access (user/admin)
+- Admin access restricted via whitelisted emails
 
-✅ **Book Management**
-- CRUD endpoints for books
-- Assign cover images to books (cloud upload)
+### 🔗 URL Shortening & Management
+- Generate short links (custom or random backhalves)
+- Update, delete, and manage links
+- Ownership-based access control
 
-✅ **Admin Panel**
-- View and manage users and store data
+### ✉️ Email Integration
+- Welcome emails for new users
+- Secure password reset flow via email
 
-✅ **Image Uploads**
-- Store images in Cloudinary via Multer and API endpoints
+### 📈 Analytics
+- Track visits per link and per user
 
-✅ **Developer Friendly**
-- Modular architecture (controllers, routes, models)
-- Comprehensive error handling
-- Environment-based config
+### 🚀 Production Ready
+- Rate limiting for critical endpoints
+- Modular TypeScript architecture
+- CORS support and centralized error handling
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category        | Technology              |
-|-----------------|------------------------|
-| **Runtime**     | Node.js (v16+)         |
-| **Framework**   | Express.js v5.2.1      |
-| **Database**    | MongoDB + Mongoose v9.1.3 |
-| **Authentication** | JWT (`jsonwebtoken` v9.0.3) |
-| **Security**    | bcrypt v6.0.0, bcryptjs v3.0.3 |
-| **Env Mgmt**    | dotenv v17.2.3         |
-| **Uploads**     | multer v2.0.2          |
-| **Cloud Media** | Cloudinary v2.9.0      |
-| **Dev Tools**   | nodemon v3.1.11        |
+| Category        | Technology                  |
+|----------------|----------------------------|
+| Runtime        | Node.js (v18+)             |
+| Framework      | Express.js v5              |
+| Database       | MongoDB + Mongoose         |
+| Authentication | JWT (jsonwebtoken)         |
+| Hashing        | bcrypt                     |
+| Email          | Nodemailer + Gmail OAuth2  |
+| Validation     | express-validator          |
+| Rate Limiting  | express-rate-limit         |
+| Logging        | Morgan, Winston            |
+| Env Mgmt       | dotenv                     |
 
 ---
 
 ## 📁 Project Structure
 
-```
-Book store api/
-├── config/         # App and cloud config files
-├── controllers/    # Request handling and business logic
-├── database/       # MongoDB connection logic
-├── helpers/        # Utility functions
-├── middlewares/    # Express middlewares (auth, error, etc.)
-├── models/         # Mongoose data models
-├── routes/         # Express route definitions
-├── server.js       # Application entry point
-├── package.json    # Project metadata & dependencies
-├── package-lock.json
-└── .env            # (your local environment file)
+```bash
+LinkDock/
+├── controllers/        # Route logic
+├── helpers/            # Utility functions
+├── lib/                # DB, mail, JWT, CORS
+├── middlewares/        # Auth & error handling
+├── models/             # Mongoose schemas
+├── routes/             # API routes
+├── emailTemplates/     # Email templates
+├── .env.example
+├── package.json
+└── README.md
 ```
 
 ---
@@ -93,199 +79,203 @@ Book store api/
 ## ⚙️ Installation
 
 ### Prerequisites
-- **Node.js** (v16 or higher)
-- **MongoDB** (local or Atlas/cloud)
-- **npm** package manager
+- Node.js 18+
+- MongoDB (local or Atlas)
+- Gmail account (for email features)
 
-### Step-by-Step Setup
+### Setup Steps
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/Birabhadra/Mini-Projects.git
-   cd "Book store api"
-   ```
+#### 1. Clone Repository
+```bash
+git clone https://github.com/Birabhadra/LinkDock.git
+cd LinkDock
+```
 
-2. **Install Dependencies**
-   ```bash
-   npm install
-   ```
+#### 2. Install Dependencies
+```bash
+npm install
+```
 
-3. **Configure Environment Variables**
-   Create a `.env` file in the `Book store api/` directory as described below.
+#### 3. Configure Environment
+Create a `.env` file:
 
-4. **Start the Server**
-   ```bash
-   # Development mode (with hot-reload)
-   npm run dev
+```env
+PORT=5000
+MONGODB_URL=mongodb://localhost:27017/linkdock
+JWT_ACCESS_SECRET=your_access_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+JWT_PASSRESET_SECRET=your_passreset_secret
+EMAIL_USER=your_email@gmail.com
+CLIENT_ID=your_gmail_client_id
+CLIENT_SECRET=your_gmail_client_secret
+REFRESH_TOKEN=your_gmail_oauth_refresh_token
+CLIENT_ORIGIN=http://localhost:3000
+CORS_WHITELIST=http://localhost:3000
+WHITELISTED_EMAILS=admin@yourdomain.com
+WINDOW_MS=60000
+```
 
-   # Production mode
-   node server.js
-   ```
-   API will run at: `http://localhost:3000`
+#### 4. Run the App
+```bash
+npm run dev
+```
 
---- 
+🌐 API will run on: **http://localhost:5000**
+
+---
 
 ## 🔌 API Endpoints
 
-### 🔐 Authentication (`/api/auth`)
-| Method | Endpoint        | Description        | Auth Required |
-|--------|----------------|-------------------|---------------|
-| POST   | /register      | Register new user | ❌            |
-| POST   | /login         | User login        | ❌            |
-| POST   | /logout        | User logout       | ✅            |
+### 🔐 Authentication (`/auth`)
 
-**Register Example:**
-```json
+| Method | Endpoint            | Description                 | Auth |
+|--------|---------------------|-----------------------------|------|
+| POST   | /register           | Register user               | ❌   |
+| POST   | /login              | Login & get tokens          | ❌   |
+| DELETE | /logout             | Logout user                 | ✅   |
+| GET    | /refresh-token      | Refresh access token        | ❌   |
+| POST   | /forgot-password    | Send reset email            | ❌   |
+| POST   | /reset-password     | Reset password              | ❌   |
+
+---
+
+### 👤 User (`/user`)
+
+| Method | Endpoint | Description              | Auth |
+|--------|----------|--------------------------|------|
+| GET    | /me      | Get profile              | ✅   |
+| PUT    | /me      | Update profile           | ✅   |
+| DELETE | /me      | Deactivate account       | ✅   |
+
+---
+
+### 🔗 Links (`/link`)
+
+| Method | Endpoint         | Description        | Auth |
+|--------|------------------|--------------------|------|
+| POST   | /generate        | Create short link  | ✅   |
+| GET    | /my-links        | List links         | ✅   |
+| PUT    | /my-links/:id    | Update link        | ✅   |
+| DELETE | /my-links/:id    | Delete link        | ✅   |
+
+---
+
+### 🌐 Public Redirect
+
+| Method | Endpoint   | Description              |
+|--------|------------|--------------------------|
+| GET    | /:backHalf | Redirect to original URL |
+
+---
+
+👉 Protected routes require:
+```
+Authorization: Bearer <access_token>
+```
+
+---
+
+## 🌱 Usage Examples
+
+### Register
+```http
+POST /auth/register
+Content-Type: application/json
+
 {
-  "username": "john_doe",
-  "email": "john@example.com",
-  "password": "secure_password"
+  "name": "Alice",
+  "email": "alice@email.com",
+  "password": "StrongPass123"
 }
 ```
-**Login Example:**
-```json
+
+### Create Short Link
+```http
+POST /link/generate
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
 {
-  "email": "john@example.com",
-  "password": "secure_password"
+  "title": "My Blog",
+  "destination": "https://myblog.com"
 }
 ```
 
----
-
-### 📚 Book Management (`/api/books`)
-| Method | Endpoint           | Description           | Auth Required |
-|--------|-------------------|----------------------|---------------|
-| GET    | /                 | List all books       | ❌            |
-| GET    | /:id              | Get book by ID       | ❌            |
-| POST   | /                 | Create new book      | ✅ (Admin)    |
-| PUT    | /:id              | Update a book        | ✅ (Admin)    |
-| DELETE | /:id              | Delete a book        | ✅ (Admin)    |
-
-**Book Example:**
-```json
-{
-  "title": "Node.js in Action",
-  "author": "Mike Cantelon",
-  "price": 29.99,
-  "description": "Comprehensive Node.js book",
-  "coverImage": "https://...cloudinary.com/image.jpg"
-}
+### Redirect
+```http
+GET /xyz12
 ```
 
----
-
-### 🏠 Home (`/api/home`)
-| Method | Endpoint   | Description          | Auth Required |
-|--------|------------|---------------------|---------------|
-| GET    | /          | Get homepage data   | ❌            |
-
----
-
-### 🔑 Admin (`/api/admin`)
-| Method | Endpoint           | Description               | Auth Required |
-|--------|-------------------|--------------------------|---------------|
-| GET    | /stats            | Store statistics         | ✅ (Admin)    |
-| GET    | /users            | List all users           | ✅ (Admin)    |
-| POST   | /manage           | Admin management         | ✅ (Admin)    |
-
----
-
-### 🖼️ Image Upload (`/api/image`)
-| Method | Endpoint     | Description                | Auth Required |
-|--------|-------------|---------------------------|---------------|
-| POST   | /upload     | Upload book cover image   | ✅ (Admin)    |
-| DELETE | /:id        | Delete image by ID        | ✅ (Admin)    |
+➡️ Redirects to original URL and increments visit count
 
 ---
 
 ## 🔐 Environment Variables
 
-Create a `.env` file in the `Book store api/` directory with these variables:
-
-```env
-# Server
-PORT=3000
-
-# Database
-MONGODB_URI=your_mongodb_connection_string_here
-
-# JWT
-JWT_SECRET=your_jwt_secret_key_here
-
-# Cloudinary (for image uploads)
-CLOUDINARY_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-```
-> ⚠️ **Never commit your `.env` to version control!**
-
----
-
-## 🚀 Usage
-
-### Register a user
-```bash
-curl -X POST http://localhost:3000/api/auth/register -H "Content-Type: application/json" -d '{"username":"john","email":"john@example.com","password":"password"}'
-```
-### Get all books
-```bash
-curl http://localhost:3000/api/books
-```
-### Add a book (Admin)
-```bash
-curl -X POST http://localhost:3000/api/books \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{"title":"Node.js in Action", "author":"Mike", "price":49.99}'
-```
+| Variable             | Description                          |
+|----------------------|--------------------------------------|
+| PORT                 | Server port                          |
+| MONGODB_URL          | MongoDB connection string            |
+| JWT_ACCESS_SECRET    | Access token secret                  |
+| JWT_REFRESH_SECRET   | Refresh token secret                 |
+| JWT_PASSRESET_SECRET | Password reset token secret          |
+| EMAIL_USER           | Gmail sender email                   |
+| CLIENT_ID            | OAuth client ID                      |
+| CLIENT_SECRET        | OAuth client secret                  |
+| REFRESH_TOKEN        | OAuth refresh token                  |
+| CLIENT_ORIGIN        | Allowed frontend origin              |
+| CORS_WHITELIST       | Allowed CORS domains                 |
+| WHITELISTED_EMAILS   | Admin email whitelist                |
+| WINDOW_MS            | Rate limit window                    |
 
 ---
 
 ## 🛡️ Security
 
-- **Password Hashing**: User passwords hashed with bcrypt/bcryptjs
-- **JWT Authentication**: Secure token-based login/auth
-- **Environment Safety**: Sensitive credentials kept in `.env`
-- **Input Validation**: (Recommend) Validate all input data
-- **Role-based Control**: Admin-only endpoints for critical ops
+- 🔒 Passwords hashed using **bcrypt**
+- 🍪 Secure **HttpOnly cookies** for refresh tokens
+- 🌐 Strict **CORS policy**
+- 🚦 Rate limiting on sensitive endpoints
+- 🧹 Soft deletion for user accounts
+- ✅ Strong input validation
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please fork the repository, create a feature branch, commit your changes, and create a Pull Request.
+Contributions are welcome!
 
-**Development Style:**
-- Use 2 spaces for indentation
-- Use ES6+ JS syntax
-- Document functions and routes
-- Use descriptive commit messages
-
-**Commit Format:**
-```
-feat: add book search endpoint
-fix: patch book deletion bug
-docs: update API documentation
-```
+1. Create a feature branch  
+2. Make your changes  
+3. Submit a pull request  
 
 ---
 
 ## 👨‍💻 Author
 
-**Birabhadra** - [GitHub Profile](https://github.com/Birabhadra)
+**Birabhadra Sahoo**  
+GitHub: https://github.com/Birabhadra
 
 ---
 
-## 🙏 Acknowledgments
+## 🙌 Acknowledgments
 
-- Express.js, MongoDB, Mongoose, JWT, bcrypt, Multer, Cloudinary
+Built using:
+- Express.js  
+- MongoDB & Mongoose  
+- JWT  
+- bcrypt  
+- Nodemailer  
+- Winston & Morgan  
+
+Inspired by modern backend API best practices.
 
 ---
 
 <div align="center">
 
-⭐ **If you find this project helpful, please consider giving it a star!** ⭐
+⭐ **If you find this project useful, consider giving it a star!** ⭐  
 
-**Last Updated**: March 24, 2026 | **Version**: 1.0.0
+<sub>Last Updated: April 6, 2026</sub>
 
 </div>
